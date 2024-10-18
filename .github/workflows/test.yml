@@ -72,7 +72,7 @@ jobs:
 
       - name: Delete Old Workflow Runs
         env:
-          WORKFLOW_FILE: "2-commit-a-file.yml" 
+          WORKFLOW_FILE: "4-merge-your-pull-request.yml" 
           DAYS_TO_KEEP: "2"
         run: |
           #!/bin/bash
