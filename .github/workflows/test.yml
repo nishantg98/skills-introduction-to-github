@@ -4,6 +4,56 @@ on:
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
+ cleanup-releases:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh
+      
+      - name: Authenticate with GitHub CLI
+        run: gh auth login
+
+      - name: Install jq for JSON parsing
+        run: sudo apt-get install jq -y
+
+      - name: Delete Old Releases
+        env:
+          DAYS_TO_KEEP: "1"
+        run: |
+          #!/bin/bash
+          set -e
+
+          days_to_keep="${DAYS_TO_KEEP}"
+
+          # Calculate cutoff date (releases older than this will be deleted)
+          cutoff_date=$(date -d "$days_to_keep days ago" +%Y-%m-%dT%H:%M:%SZ)
+
+          echo "Cutoff date for deleting releases: $cutoff_date"
+
+          # List all releases (limit to 100) and check their creation date
+          releases_to_delete=$(gh release list --limit 100 --json tagName,createdAt | \
+            jq -r --arg cutoff "$cutoff_date" '.[] | select(.createdAt < $cutoff) | .tagName')
+
+          # Check if there are any releases to delete
+          if [ -z "$releases_to_delete" ]; then
+            echo "No releases older than $days_to_keep days to delete."
+          else
+            echo "Deleting the following releases:"
+            echo "$releases_to_delete"
+
+            # Delete each release found
+            echo "$releases_to_delete" | while read -r release_tag; do
+              gh release delete -y "$release_tag"
+              echo "Deleted release: $release_tag"
+            done
+
+            echo "Release deletion complete."
+          fi
+
  cleanup-workflows:
     runs-on: ubuntu-latest
 
@@ -57,3 +107,5 @@ jobs:
 
             echo "Deletion complete."
           fi
+
+   
