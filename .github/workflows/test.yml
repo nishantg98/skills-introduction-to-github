@@ -65,18 +65,14 @@ jobs:
         run: sudo apt-get install gh
       
       - name: Authenticate with GitHub CLI
-        run: gh auth login
-      
-      # Now you can use the GitHub CLI in subsequent steps
-      - name: List GitHub releases
-        run: gh release list
+        run: echo ${{ secrets.GITHUB_TOKEN }} | gh auth login --with-token
 
       - name: Install jq for JSON parsing
         run: sudo apt-get install jq -y
 
       - name: Delete Old Workflow Runs
         env:
-          WORKFLOW_FILE: "0-welcome.yml" 
+          WORKFLOW_FILE: "2-commit-a-file.yml" 
           DAYS_TO_KEEP: "2"
         run: |
           #!/bin/bash
