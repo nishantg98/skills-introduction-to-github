@@ -11,10 +11,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up GitHub CLI
-        uses: github/setup-gh@v1
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install GitHub CLI
+        run: sudo apt-get install gh
+      
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+      
+      # Now you can use the GitHub CLI in subsequent steps
+      - name: List GitHub releases
+        run: gh release list
 
       - name: Install jq for JSON parsing
         run: sudo apt-get install jq -y
