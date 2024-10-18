@@ -15,7 +15,7 @@ jobs:
         run: sudo apt-get install gh
       
       - name: Authenticate with GitHub CLI
-        run: gh auth login --with-token <<< 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
+        run: gh auth login
       
       # Now you can use the GitHub CLI in subsequent steps
       - name: List GitHub releases
