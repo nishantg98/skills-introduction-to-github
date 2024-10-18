@@ -53,7 +53,7 @@ jobs:
             cat runs_to_delete.txt
 
             # Delete each workflow run found
-            cat runs_to_delete.txt | xargs -I{} gh run delete {} --confirm
+            cat runs_to_delete.txt | xargs -I{} gh run delete {}
 
             echo "Deletion complete."
           fi
