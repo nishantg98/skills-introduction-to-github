@@ -99,7 +99,7 @@ jobs:
       - name: Delete Old Workflow Runs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WORKFLOW_FILE: "4-merge-your-pull-request.yml" 
+          WORKFLOW_FILE: "0-welcome.yml" 
           DAYS_TO_KEEP: "2"
         run: |
           #!/bin/bash
