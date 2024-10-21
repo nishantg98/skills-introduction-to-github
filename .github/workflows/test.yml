@@ -47,6 +47,8 @@ jobs:
         run: sudo apt-get install gh
       
       - name: Authenticate with GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh auth login --with-token
 
       - name: Install jq for JSON parsing
@@ -96,6 +98,8 @@ jobs:
         run: sudo apt-get install gh
       
       - name: Authenticate with GitHub CLI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh auth login --with-token
 
       - name: Install jq for JSON parsing
