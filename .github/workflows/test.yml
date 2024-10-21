@@ -3,6 +3,9 @@ name: Delete Old ECR Images
 on:
   workflow_dispatch:  # Allows manual trigger
 
+permissions:
+  contents: write
+
 jobs:
  delete_old_tags:
     runs-on: ubuntu-latest
@@ -22,6 +25,8 @@ jobs:
           echo "::set-output name=tags::$OLD_TAGS"
 
       - name: Delete old tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         if: steps.old_tags.outputs.tags != ''
         run: |
           # Iterate and delete each tag older than 30 days
