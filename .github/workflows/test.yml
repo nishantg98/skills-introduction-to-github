@@ -45,17 +45,13 @@ jobs:
 
       - name: Install GitHub CLI
         run: sudo apt-get install gh
-      
-      - name: Authenticate with GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh auth login --with-token
 
       - name: Install jq for JSON parsing
         run: sudo apt-get install jq -y
 
       - name: Delete Old Releases
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DAYS_TO_KEEP: "1"
         run: |
           #!/bin/bash
@@ -96,17 +92,13 @@ jobs:
 
       - name: Install GitHub CLI
         run: sudo apt-get install gh
-      
-      - name: Authenticate with GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh auth login --with-token
 
       - name: Install jq for JSON parsing
         run: sudo apt-get install jq -y
 
       - name: Delete Old Workflow Runs
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WORKFLOW_FILE: "4-merge-your-pull-request.yml" 
           DAYS_TO_KEEP: "2"
         run: |
