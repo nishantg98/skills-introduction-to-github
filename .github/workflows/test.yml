@@ -4,6 +4,33 @@ on:
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
+ delete_old_tags:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Fetch all tags
+        run: |
+          git fetch --all --tags
+
+      - name: Get tags older than 30 days
+        id: old_tags
+        run: |
+          # Get tags older than 30 days and store them in a variable
+          OLD_TAGS=$(git for-each-ref --sort=creatordate --format '%(creatordate:short) %(refname:short)' refs/tags | awk -v date="$(date -d '30 days ago' +%Y-%m-%d)" '$1 < date {print $2}')
+          echo "::set-output name=tags::$OLD_TAGS"
+
+      - name: Delete old tags
+        if: steps.old_tags.outputs.tags != ''
+        run: |
+          # Iterate and delete each tag older than 30 days
+          for tag in ${{ steps.old_tags.outputs.tags }}; do
+            echo "Deleting tag $tag"
+            git tag -d $tag
+            git push origin :refs/tags/$tag
+          done
+          
  cleanup-releases:
     runs-on: ubuntu-latest
 
@@ -53,7 +80,6 @@ jobs:
 
             echo "Release deletion complete."
           fi
-
  cleanup-workflows:
     runs-on: ubuntu-latest
 
